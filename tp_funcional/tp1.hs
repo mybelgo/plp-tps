@@ -51,7 +51,10 @@ type Reducer k v b = (k, [v]) -> [b]
 
 -- Ejercicio 6
 distributionProcess :: Int -> [a] -> [[a]]
-distributionProcess = undefined
+distributionProcess n xs = foldl add_to_split (replicate n []) xs_idx
+  where
+    xs_idx = zip xs (cycle [0..n-1]) -- The parameter list but with the indexes of the split to which each element will belong
+    add_to_split r (v, idx) = take idx r ++ [r !! idx ++ [v]] ++ drop (idx + 1) r
 
 -- Ejercicio 7
 mapperProcess :: Eq k => Mapper a k v -> [a] -> Dict k [v]
