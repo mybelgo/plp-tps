@@ -29,13 +29,15 @@ get e = foldr (\(k, v) r -> if k == e then v else r) (error "key not found")
 insertWith :: Eq k => (v -> v -> v) -> k -> v -> Dict k v -> Dict k v
 insertWith f e_k e_v d
   | d ? e_k   = foldr (\(k, v) r -> if k == e_k then ((k, f v e_v):r) else ((k, v):r)) [] d
-  | otherwise = ((e_k, e_v):d)
+  | otherwise = d ++ [(e_k, e_v)]
 --Main> insertWith (++) 2 ['p'] (insertWith (++) 1 ['a','b'] (insertWith (++) 1 ['l'] []))
 --[(1,"lab"),(2,"p")]
 
 -- Ejercicio 4
 groupByKey :: Eq k => [(k,v)] -> Dict k [v]
-groupByKey = undefined
+groupByKey = foldl (\rec (k, v) -> insertWith (++) k [v] rec) []
+-- Main> groupByKey [("calle","Jean Jaures"),("ciudad","Brujas"), ("ciudad","Kyoto"),("calle","7")]
+-- [("calle",["Jean Jaures","7"]),("ciudad",["Brujas","Kyoto"])]
 
 -- Ejercicio 5
 unionWith :: Eq k => (v -> v -> v) -> Dict k v -> Dict k v -> Dict k v
@@ -193,7 +195,7 @@ testsEj3 = test [
   ]
 
 testsEj4 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
+  [("calle",["Jean Jaures","7"]),("ciudad",["Brujas","Kyoto"])] ~=? (groupByKey [("calle","Jean Jaures"),("ciudad","Brujas"), ("ciudad","Kyoto"),("calle","7")]) 
   ]
 
 testsEj5 = test [
