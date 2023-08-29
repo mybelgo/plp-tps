@@ -9,10 +9,10 @@ type Dict k v = [(k,v)]
 
 -- Ejercicio 1
 belongs :: Eq k => k -> Dict k v -> Bool
-belongs = undefined
+belongs e = foldr (\(k,_) rec -> (k == e) || rec) False
 
 (?) :: Eq k => Dict k v -> k -> Bool
-(?) = undefined
+(?) = flip belongs
 --Main> [("calle",[3]),("city",[2,1])] ? "city"
 --True
 
