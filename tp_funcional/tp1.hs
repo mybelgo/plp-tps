@@ -18,11 +18,11 @@ belongs = undefined
 
 -- Ejercicio 2
 get :: Eq k => k -> Dict k v -> v
-get = undefined
+get e = foldr (\(k, v) r -> if k == e then v else r) (error "key not found")
 
 (!) :: Eq k => Dict k v -> k -> v
-(!) = undefined
---Main> [("calle",[3]),("city",[2,1])] ! "city" 
+(!) = flip get
+--Main> [("calle",[3]),("city",[2,1])] ! "city"
 --[2,1]
 
 -- Ejercicio 3
