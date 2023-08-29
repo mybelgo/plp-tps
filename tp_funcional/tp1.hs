@@ -13,7 +13,7 @@ belongs = undefined
 
 (?) :: Eq k => Dict k v -> k -> Bool
 (?) = undefined
---Main> [("calle",[3]),("city",[2,1])] ? "city" 
+--Main> [("calle",[3]),("city",[2,1])] ? "city"
 --True
 
 -- Ejercicio 2
@@ -123,7 +123,7 @@ ordenarPorVisitas = mapReduce mapperOPV reducerOPV
 
 monumentosTop :: [String] -> [String]
 monumentosTop = ordenarPorVisitas.visitasPorMonumento
-                
+
 
 -- ------------------------ Ejemplo de datos para pruebas ----------------------
 data Structure = Street | City | Monument deriving Show
@@ -173,7 +173,7 @@ allTests = test [
   "ejercicio8" ~: testsEj9,
   "ejercicio8" ~: testsEj10
   ]
-  
+
 testsEj1 = test [
   ([("calle",[3]),("ciudad",[2,1])] ? "ciudad")  ~=? True,
   ([("calle",[3]),("ciudad",[2,1])] ? "perro")  ~=? False --Agregar sus propios tests.
