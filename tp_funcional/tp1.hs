@@ -60,7 +60,7 @@ distributionProcess n xs = foldl add_to_split (replicate n []) xs_idx
 
 -- Ejercicio 7
 mapperProcess :: Eq k => Mapper a k v -> [a] -> Dict k [v]
-mapperProcess = undefined
+mapperProcess m = groupByKey . concatMap m
 
 -- Ejercicio 8
 combinerProcess :: (Eq k, Ord k) => [Dict k [v]] -> Dict k [v]
@@ -207,7 +207,7 @@ testsEj6 = test [
   ]
 
 testsEj7 = test [
-  mapperProcess mapperRestos [1, 5, 10, 25, 3, 14, 4] ~=? [(4,[4,14]),(3,[3]),(0,[25,10,5]),(1,[1])] --Agregar sus propios tests.
+  mapperProcess mapperRestos [1, 5, 10, 25, 3, 14, 4] ~=? [(1,[1]),(0,[5,10,25]),(3,[3]),(4,[14,4])] --Agregar sus propios tests.
   ]
 
 testsEj8 = test [
