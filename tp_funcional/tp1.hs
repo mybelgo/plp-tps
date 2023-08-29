@@ -182,45 +182,53 @@ allTests = test [
   ]
 
 testsEj1 = test [
-  ([("calle",[3]),("ciudad",[2,1])] ? "ciudad")  ~=? True,
-  ([("calle",[3]),("ciudad",[2,1])] ? "perro")  ~=? False --Agregar sus propios tests.
+  True ~=? ([("calle",[3]),("ciudad",[2,1])] ? "ciudad"),
+  False ~=? ([("calle",[3]),("ciudad",[2,1])] ? "perro")
+  --Agregar sus propios tests.
   ]
 
 testsEj2 = test [
-  [("calle","San Blas"),("ciudad","Hurlingham")] ! "ciudad" ~=? "Hurlingham" --Agregar sus propios tests.
+  "Hurlingham" ~=? [("calle","San Blas"),("ciudad","Hurlingham")] ! "ciudad"
+  --Agregar sus propios tests.
   ]
 
 testsEj3 = test [
-  (insertWith (++) 1 [99] [(1, [1]), (2, [2])]) ~=? [(1,[1,99]),(2,[2])] --Agregar sus propios tests.
+  [(1,[1,99]),(2,[2])] ~=? (insertWith (++) 1 [99] [(1, [1]), (2, [2])])
+  --Agregar sus propios tests.
   ]
 
 testsEj4 = test [
-  [("calle",["Jean Jaures","7"]),("ciudad",["Brujas","Kyoto"])] ~=? (groupByKey [("calle","Jean Jaures"),("ciudad","Brujas"), ("ciudad","Kyoto"),("calle","7")]) 
+  [("calle",["Jean Jaures","7"]),("ciudad",["Brujas","Kyoto"])] ~=? (groupByKey [("calle","Jean Jaures"),("ciudad","Brujas"), ("ciudad","Kyoto"),("calle","7")])
   ]
 
 testsEj5 = test [
-  (unionWith (+) [("rutas",3)] [("rutas", 4), ("ciclos", 1)]) ~=? [("rutas",7),("ciclos",1)] --Agregar sus propios tests.
+  [("rutas",7),("ciclos",1)] ~=? (unionWith (+) [("rutas",3)] [("rutas", 4), ("ciclos", 1)])
+  --Agregar sus propios tests.
   ]
 
 testsEj6 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
+  0 ~=? 0
+  --Cambiar esto por tests verdaderos.
   ]
 
 testsEj7 = test [
-  mapperProcess mapperRestos [1, 5, 10, 25, 3, 14, 4] ~=? [(1,[1]),(0,[5,10,25]),(3,[3]),(4,[14,4])] --Agregar sus propios tests.
+  [(1,[1]),(0,[5,10,25]),(3,[3]),(4,[14,4])] ~=? mapperProcess mapperRestos [1, 5, 10, 25, 3, 14, 4]
+  --Agregar sus propios tests.
   ]
 
 testsEj8 = test [
-  (map (\(x,y)->(x,sort y)) $ combinerProcess palabras) ~=? [(1,["Chau","Hola","Saludos"]),(2,["Gato","Jirafa","Perro","Perro"]),(3,["Casa"]),(4,["Auto","Barco","Tren"])]
+  [(1,["Chau","Hola","Saludos"]),(2,["Gato","Jirafa","Perro","Perro"]),(3,["Casa"]),(4,["Auto","Barco","Tren"])] ~=? (map (\(x,y)->(x,sort y)) $ combinerProcess palabras)
  --Agregar sus propios tests.
   ]
 
 testsEj9 = test [
-  reducerProcess (\(x, xs)->x : nub xs)  [("Saludo:",["Chau","Hola","Saludos"]),("Mamífero:",["Gato","Jirafa","Perro","Perro"]),("Edificio:",["Casa"]),("Vehículo:",["Auto","Barco","Tren"])] ~=? ["Saludo:","Chau","Hola","Saludos","Mamífero:","Gato","Jirafa","Perro","Edificio:","Casa","Vehículo:","Auto","Barco","Tren"] --Agregar sus propios tests.
+  ["Saludo:","Chau","Hola","Saludos","Mamífero:","Gato","Jirafa","Perro","Edificio:","Casa","Vehículo:","Auto","Barco","Tren"] ~=? reducerProcess (\(x, xs)->x : nub xs)  [("Saludo:",["Chau","Hola","Saludos"]),("Mamífero:",["Gato","Jirafa","Perro","Perro"]),("Edificio:",["Casa"]),("Vehículo:",["Auto","Barco","Tren"])]
+  --Agregar sus propios tests.
   ]
 
 testsEj10 = test [
-  sort (visitasPorMonumento ["m1","m2","m3","m2"]) ~=? [("m1",1),("m2",2),("m3",1)],
-  [("Argentina",2),("Irak",1)] ~=? sort (monumentosPorPais items),
-  monumentosTop ["m3","m2","m2","m3","m1","m2","m3","m3","m4","m1"] ~=? ["m3","m2","m1","m4"] --Agregar sus propios tests.
+  [("m1",1),("m2",2),("m3",1)] ~=? sort (visitasPorMonumento ["m1","m2","m3","m2"]),
+  sort (monumentosPorPais items) ~=? [("Argentina",2),("Irak",1)],
+  ["m3","m2","m1","m4"] ~=? monumentosTop ["m3","m2","m2","m3","m1","m2","m3","m3","m4","m1"]
+  --Agregar sus propios tests.
   ]
