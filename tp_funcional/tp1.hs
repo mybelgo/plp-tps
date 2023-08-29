@@ -27,7 +27,9 @@ get e = foldr (\(k, v) r -> if k == e then v else r) (error "key not found")
 
 -- Ejercicio 3
 insertWith :: Eq k => (v -> v -> v) -> k -> v -> Dict k v -> Dict k v
-insertWith = undefined
+insertWith f e_k e_v d
+  | d ? e_k   = foldr (\(k, v) r -> if k == e_k then ((k, f v e_v):r) else ((k, v):r)) [] d
+  | otherwise = ((e_k, e_v):d)
 --Main> insertWith (++) 2 ['p'] (insertWith (++) 1 ['a','b'] (insertWith (++) 1 ['l'] []))
 --[(1,"lab"),(2,"p")]
 
