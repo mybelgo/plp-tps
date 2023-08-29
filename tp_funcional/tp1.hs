@@ -68,7 +68,7 @@ combinerProcess = undefined
 
 -- Ejercicio 9
 reducerProcess :: Reducer k v b -> Dict k [v] -> [b]
-reducerProcess = undefined
+reducerProcess = concatMap
 
 -- Ejercicio 10
 mapReduce :: (Eq k, Ord k) => Mapper a k v -> Reducer k v b -> [a] -> [b]
