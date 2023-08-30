@@ -65,7 +65,7 @@ mapperProcess m = groupByKey . concatMap m
 
 -- Ejercicio 8
 combinerProcess :: (Eq k, Ord k) => [Dict k [v]] -> Dict k [v]
-combinerProcess = undefined
+combinerProcess = (sortBy (\(k1,_) (k2,_) -> if k1 < k2 then LT else GT)) . foldr (unionWith (++)) []
 
 -- Ejercicio 9
 reducerProcess :: Reducer k v b -> Dict k [v] -> [b]
@@ -178,8 +178,8 @@ allTests = test [
   "ejercicio6" ~: testsEj6,
   "ejercicio7" ~: testsEj7,
   "ejercicio8" ~: testsEj8,
-  "ejercicio8" ~: testsEj9,
-  "ejercicio8" ~: testsEj10
+  "ejercicio9" ~: testsEj9,
+  "ejercicio10" ~: testsEj10
   ]
 
 testsEj1 = test [
@@ -208,8 +208,8 @@ testsEj5 = test [
   ]
 
 testsEj6 = test [
-  0 ~=? 0
-  --Cambiar esto por tests verdaderos.
+  [[3,8],[2,7,12],[1,6,11],[5,10],[4,9]] ~=? distributionProcess 5 [1,2,3,4,5,6,7,8,9,10,11,12] 
+  --Agregar sus propios tests.
   ]
 
 testsEj7 = test [
