@@ -187,8 +187,11 @@ allTests = test [
 
 testsEj1 = test [
   True ~=? ([("calle",[3]),("ciudad",[2,1])] ? "ciudad"),
-  False ~=? ([("calle",[3]),("ciudad",[2,1])] ? "perro")
-  --Agregar sus propios tests.
+  False ~=? ([("calle",[3]),("ciudad",[2,1])] ? "perro"),
+  False ~=? ([("lampara",[50]),("escritorio",[12])] ? "ciudad"),
+  False ~=? ([("lampara",[50])] ? "escritorio"),
+  False ~=? ([] ? "calle"),
+  True ~=? ([("calle",[50])] ? "calle")
   ]
 
 testsEj2 = test [
@@ -197,8 +200,12 @@ testsEj2 = test [
   ]
 
 testsEj3 = test [
-  [(1,[1,99]),(2,[2])] ~=? (insertWith (++) 1 [99] [(1, [1]), (2, [2])])
-  --Agregar sus propios tests.
+  [(1,[1,99]),(2,[2])] ~=? insertWith (++) 1 [99] [(1, [1]), (2, [2])],
+  [(1,[1]),(2,[2]),(3,[99])] ~=? insertWith (++) 3 [99] [(1, [1]), (2, [2])],
+  [(1,[1])] ~=? insertWith (++) 1 [1] [(1, [])],
+  [(1,[1,2])] ~=? insertWith (++) 1 [2] (insertWith (++) 1 [1] []),
+  [(1,[1,1,2,3,4])] ~=? insertWith (++) 1 [1,2,3,4] [(1, [1])],
+  [(1,[1,2,3,4])] ~=? insertWith union 1 [1,2,3,4] [(1, [1])]
   ]
 
 testsEj4 = test [
