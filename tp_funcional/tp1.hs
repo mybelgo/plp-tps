@@ -4,6 +4,7 @@ import Data.Ord
 import Data.List
 import Test.HUnit
 
+import Data.Function ((&))
 -- ---------------------------------Sección 1---------Diccionario ---------------------------
 type Dict k v = [(k,v)]
 
@@ -73,8 +74,10 @@ reducerProcess = concatMap
 
 -- Ejercicio 10
 mapReduce :: (Eq k, Ord k) => Mapper a k v -> Reducer k v b -> [a] -> [b]
-mapReduce = undefined
-
+mapReduce mapper reducer xs = distributionProcess 100 xs
+                              & map (mapperProcess mapper)
+                              & combinerProcess
+                              & reducerProcess reducer
 
 --Funciones de prueba --
 
