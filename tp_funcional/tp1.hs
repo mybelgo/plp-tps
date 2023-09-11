@@ -209,12 +209,13 @@ testsEj3 = test [
   ]
 
 testsEj4 = test [
-  [("calle",["Jean Jaures","7"]),("ciudad",["Brujas","Kyoto"])] ~=? (groupByKey [("calle","Jean Jaures"),("ciudad","Brujas"), ("ciudad","Kyoto"),("calle","7")])
+  [("calle",["Jean Jaures","7"]),("ciudad",["Brujas","Kyoto"])] ~=? groupByKey [("calle","Jean Jaures"),("ciudad","Brujas"), ("ciudad","Kyoto"),("calle","7")],
+  [("calle",[1,2,4]),("ciudad",[3,5])] ~=? groupByKey [("calle",1),("calle",2),("ciudad",3),("calle",4),("ciudad",5)]
   ]
 
 testsEj5 = test [
-  [("rutas",7),("ciclos",1)] ~=? (unionWith (+) [("rutas",3)] [("rutas", 4), ("ciclos", 1)])
-  --Agregar sus propios tests.
+  [("rutas",7),("ciclos",1)] ~=? unionWith (+) [("rutas",3)] [("rutas", 4), ("ciclos", 1)],
+  [("rutas", [1,2,3]), ("ciclos", [4,5,6])] ~=? unionWith union [("rutas",[1,2,3])] [("rutas", [1,2,3]), ("ciclos", [4,5,6])]
   ]
 
 testsEj6 = test [
@@ -228,8 +229,8 @@ testsEj7 = test [
   ]
 
 testsEj8 = test [
-  [(1,["Chau","Hola","Saludos"]),(2,["Gato","Jirafa","Perro","Perro"]),(3,["Casa"]),(4,["Auto","Barco","Tren"])] ~=? (map (\(x,y)->(x,sort y)) $ combinerProcess palabras)
- --Agregar sus propios tests.
+  [(1,["Chau","Hola","Saludos"]),(2,["Gato","Jirafa","Perro","Perro"]),(3,["Casa"]),(4,["Auto","Barco","Tren"])] ~=? (map (\(x,y)->(x,sort y)) $ combinerProcess palabras),
+  [("cuatro cinco seis",[4,5,6]),("uno dos tres",[1,2,3])] ~=? (map (\(x,y)->(x,sort y)) $ combinerProcess [[("uno dos tres",[1]), ("cuatro cinco seis",[4,5]), ("uno dos tres",[2])], [("cuatro cinco seis",[6]), ("uno dos tres",[3])]])
   ]
 
 testsEj9 = test [
