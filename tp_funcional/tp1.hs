@@ -56,7 +56,7 @@ type Reducer k v b = (k, [v]) -> [b]
 rotate xs = (last xs : init xs)
 
 distributionProcess :: Int -> [a] -> [[a]]
-distributionProcess n = foldl add_to_split (replicate n [])
+distributionProcess n = if n == 0 then error "at least 1 partiton" else foldl add_to_split (replicate n [])
   where
     add_to_split (h:t) x = rotate ((h ++ [x]) : t)
 
@@ -82,7 +82,6 @@ mapReduce mapper reducer xs = distributionProcess 100 xs
 --Funciones de prueba --
 
 --Restos módulo 5
-
 mapperRestos :: Mapper Int Int Int
 mapperRestos n = [(n `mod` 5, n)]
 
@@ -195,8 +194,8 @@ testsEj1 = test [
   ]
 
 testsEj2 = test [
-  "Hurlingham" ~=? [("calle","San Blas"),("ciudad","Hurlingham")] ! "ciudad"
-  --Agregar sus propios tests.
+  "Hurlingham" ~=? [("calle","San Blas"),("ciudad","Hurlingham")] ! "ciudad",
+  [50] ~=? ([("calle",[50])] ! "calle")
   ]
 
 testsEj3 = test [
@@ -219,13 +218,15 @@ testsEj5 = test [
   ]
 
 testsEj6 = test [
-  [[3,8],[2,7,12],[1,6,11],[5,10],[4,9]] ~=? distributionProcess 5 [1,2,3,4,5,6,7,8,9,10,11,12] 
-  --Agregar sus propios tests.
+  [[3,8],[2,7,12],[1,6,11],[5,10],[4,9]] ~=? distributionProcess 5 [1,2,3,4,5,6,7,8,9,10,11,12],
+  [[1,2,3,4,5,6,7,8,9,10,11,12]] ~=? distributionProcess 1 [1,2,3,4,5,6,7,8,9,10,11,12],
+  ([[]] :: [[Int]]) ~=? distributionProcess 1 [],
+  ([[], [], []] :: [[Int]]) ~=? distributionProcess 3 []
   ]
 
 testsEj7 = test [
-  [(1,[1]),(0,[5,10,25]),(3,[3]),(4,[14,4])] ~=? mapperProcess mapperRestos [1, 5, 10, 25, 3, 14, 4]
-  --Agregar sus propios tests.
+  [(1,[1]),(0,[5,10,25]),(3,[3]),(4,[14,4])] ~=? mapperProcess mapperRestos [1, 5, 10, 25, 3, 14, 4],
+  [] ~=? mapperProcess mapperRestos []
   ]
 
 testsEj8 = test [
@@ -234,13 +235,13 @@ testsEj8 = test [
   ]
 
 testsEj9 = test [
-  ["Saludo:","Chau","Hola","Saludos","Mamífero:","Gato","Jirafa","Perro","Edificio:","Casa","Vehículo:","Auto","Barco","Tren"] ~=? reducerProcess (\(x, xs)->x : nub xs)  [("Saludo:",["Chau","Hola","Saludos"]),("Mamífero:",["Gato","Jirafa","Perro","Perro"]),("Edificio:",["Casa"]),("Vehículo:",["Auto","Barco","Tren"])]
-  --Agregar sus propios tests.
+  ["Saludo:","Chau","Hola","Saludos","Mamífero:","Gato","Jirafa","Perro","Edificio:","Casa","Vehículo:","Auto","Barco","Tren"] ~=? reducerProcess (\(x, xs)->x : nub xs)  [("Saludo:",["Chau","Hola","Saludos"]),("Mamífero:",["Gato","Jirafa","Perro","Perro"]),("Edificio:",["Casa"]),("Vehículo:",["Auto","Barco","Tren"])],
+  ([] :: [String]) ~=? reducerProcess (\(x, xs)->x : nub xs) []
   ]
 
 testsEj10 = test [
   [("m1",1),("m2",2),("m3",1)] ~=? sort (visitasPorMonumento ["m1","m2","m3","m2"]),
   sort (monumentosPorPais items) ~=? [("Argentina",2),("Irak",1)],
-  ["m3","m2","m1","m4"] ~=? monumentosTop ["m3","m2","m2","m3","m1","m2","m3","m3","m4","m1"]
-  --Agregar sus propios tests.
+  ["m3","m2","m1","m4"] ~=? monumentosTop ["m3","m2","m2","m3","m1","m2","m3","m3","m4","m1"],
+  ([] :: [String]) ~=? monumentosTop []
   ]
