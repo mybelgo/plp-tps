@@ -86,7 +86,17 @@ infer' (LamExp x _ e)         n = undefined
 
 -- OPCIONALES
 
-infer' (PredExp e)            n = undefined
+infer' (PredExp e)            n =
+  case infer' e n of
+    err@(Error _)         -> err
+    OK (n', (c', e', t')) ->
+      case mgu [(t', TNat)] of
+        UError u1 u2 -> uError u1 u2
+        UOK subst    -> OK (n',
+                            (subst <.> c',
+                             subst <.> PredExp e',
+                             TNat)
+                           )
 infer' (IsZeroExp e)          n = undefined
 infer' TrueExp                n = undefined
 infer' FalseExp               n = undefined
