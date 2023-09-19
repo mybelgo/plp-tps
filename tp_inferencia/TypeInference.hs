@@ -82,7 +82,13 @@ infer' (AppExp u v)           n =
                                  subst <.> TVar n_v
                                 )
                                )
-infer' (LamExp x _ e)         n = undefined
+infer' (LamExp x _ e)         n = 
+  case infer' e n of
+    err@(Error _) -> err
+    OK (n', (c', e', t')) ->
+      if elem x (domainC c') then OK (n', (removeC c' x, LamExp x t'' e', TFun t'' t'))
+      else OK (n'+1, (extendC (removeC c' x) x (TVar n'), LamExp x (TVar n') e', TFun (TVar n') t'))
+      where t'' = evalC c' x
 
 -- OPCIONALES
 
