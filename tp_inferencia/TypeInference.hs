@@ -121,7 +121,24 @@ infer' FalseExp                n = OK(n,
                                      (emptyContext,
                                       FalseExp,
                                       TBool))
-infer' (IfExp u v w)          n = undefined
+infer' (IfExp u v w)          n =
+  case infer' u n of
+    err@(Error _)             -> err
+    OK (n_u, (c_u, e_u, t_u)) ->
+      case infer' v n_u of
+        err@(Error _) -> err
+        OK (n_v, (c_v, e_v, t_v)) ->
+          case infer' w n_v of
+            err@(Error _) -> err
+            OK (n_w, (c_w, e_w, t_w)) ->
+              case mgu ([(t_v, t_w), (t_u, TBool)] ++ conPairGoals c_u c_v) of
+                UError u1 u2 -> uError u1 u2
+                UOK subst    -> OK (n_w,
+                                    (joinC (map (subst <.>) [c_u, c_v, c_w]),
+                                    subst <.> IfExp e_u e_v e_w,
+                                    subst <.> t_v
+                                    )
+                                   )
 
 --------------------------------
 -- YAPA: Error de unificacion --
