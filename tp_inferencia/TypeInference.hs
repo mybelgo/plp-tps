@@ -107,8 +107,14 @@ infer' (IsZeroExp e)          n =
                            (subst <.> c',
                             subst <.> IsZeroExp e',
                             TBool))
-infer' TrueExp                n = undefined
-infer' FalseExp               n = undefined
+infer' TrueExp                n = OK(n,
+                                     (emptyContext,
+                                      TrueExp,
+                                      TBool))
+infer' FalseExp                n = OK(n,
+                                     (emptyContext,
+                                      FalseExp,
+                                      TBool))
 infer' (IfExp u v w)          n = undefined
 
 --------------------------------
