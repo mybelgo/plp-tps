@@ -87,7 +87,7 @@ infer' (LamExp x _ e)         n =
     err@(Error _) -> err
     OK (n', (c', e', t')) ->
       if elem x (domainC c') then OK (n', (removeC c' x, LamExp x t'' e', TFun t'' t'))
-      else OK (n'+1, (extendC (removeC c' x) x (TVar n'), LamExp x (TVar n') e', TFun (TVar n') t'))
+      else OK (n'+1, (removeC c' x, LamExp x (TVar n') e', TFun (TVar n') t'))
       where t'' = evalC c' x
 
 -- OPCIONALES
