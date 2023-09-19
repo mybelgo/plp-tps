@@ -97,7 +97,16 @@ infer' (PredExp e)            n =
                              subst <.> PredExp e',
                              TNat)
                            )
-infer' (IsZeroExp e)          n = undefined
+infer' (IsZeroExp e)          n =
+  case infer' e n of
+    err@(Error _)         -> err
+    OK (n', (c', e', t')) ->
+      case mgu [(t', TNat)] of
+        UError u1 u2 -> uError u1 u2
+        UOK subst    -> OK(n',
+                           (subst <.> c',
+                            subst <.> IsZeroExp e',
+                            TBool))
 infer' TrueExp                n = undefined
 infer' FalseExp               n = undefined
 infer' (IfExp u v w)          n = undefined
