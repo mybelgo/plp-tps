@@ -63,7 +63,7 @@ infer' (SuccExp e)    n =
 
 -- COMPLETAR DESDE AQUI
 
-infer' ZeroExp                n = undefined
+infer' ZeroExp                n = OK (n, (emptyContext, ZeroExp, TNat))
 infer' (VarExp x)             n = OK (n+1, (extendC emptyContext x (TVar n), VarExp x, TVar n))
 infer' (AppExp u v)           n = undefined
 infer' (LamExp x _ e)         n = undefined
