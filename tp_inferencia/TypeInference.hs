@@ -22,7 +22,7 @@ typeVarsT :: Type -> [Int]
 typeVarsT = foldType (:[]) [] [] union
 
 typeVarsE :: Exp Type -> [Int]
-typeVarsE = foldExp (const []) [] id id id [] [] (\r1 r2 r3 ->nub(r1++r2++r3)) (const setAdd) union
+typeVarsE = foldExp (const []) [] id id id [] [] (\r1 r2 r3 ->nub (r1++r2++r3)) (const setAdd) union
   where setAdd t r = union (typeVarsT t) r
 
 typeVarsC :: Context -> [Int]
@@ -36,17 +36,19 @@ normalization ns = foldr (\n rec (y:ys) -> extendS n (TVar  y) emptySubst : (rec
 
 normalize :: TypingJudgment -> TypingJudgment
 normalize j@(c, e, t) = let ss = normalization $ typeVars j in foldl (\(rc, re, rt) s ->(s <.> rc, s <.> re, s <.> rt)) j ss
-  
+
 inferType :: PlainExp -> Result TypingJudgment
 inferType e = case infer' e 0 of
     OK (_, tj) -> OK tj
     Error s -> Error s
-    
+
 inferNormal :: PlainExp -> Result TypingJudgment
 inferNormal e = case infer' e 0 of
     OK (_, tj) -> OK $ normalize tj
     Error s -> Error s
 
+conPairGoals :: Context -> Context -> [UnifGoal]
+conPairGoals c_1 c_2 = [(t_1, t_2) | s <- domainC c_1 `intersect` domainC c_2, let t_1 = evalC c_1 s, let t_2 = evalC c_2 s]
 
 infer' :: PlainExp -> Int -> Result (Int, TypingJudgment)
 
@@ -59,13 +61,27 @@ infer' (SuccExp e)    n =
         UOK subst -> OK (n', (subst <.> c',
                               subst <.> SuccExp e',
                               TNat))
-    
+
 
 -- COMPLETAR DESDE AQUI
 
 infer' ZeroExp                n = OK (n, (emptyContext, ZeroExp, TNat))
 infer' (VarExp x)             n = OK (n+1, (extendC emptyContext x (TVar n), VarExp x, TVar n))
-infer' (AppExp u v)           n = undefined
+infer' (AppExp u v)           n =
+  case infer' u n of
+    err@(Error _)             -> err
+    OK (n_u, (c_u, e_u, t_u)) ->
+      case infer' v n_u of
+        err@(Error _)             -> err
+        OK (n_v, (c_v, e_v, t_v)) ->
+          case mgu ((t_u, TFun t_v (TVar n_v)) : conPairGoals c_u c_v) of
+            UError u1 u2 -> uError u1 u2
+            UOK subst    -> OK (n_v+1,
+                                (joinC [subst <.> c_u, subst <.> c_v],
+                                 subst <.> AppExp e_u e_v,
+                                 subst <.> TVar n_v
+                                )
+                               )
 infer' (LamExp x _ e)         n = undefined
 
 -- OPCIONALES
