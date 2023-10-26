@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html style="background-position: bottom right;background-repeat: no-repeat;background-image: url('https://static.wikia.nocookie.net/doblaje/images/3/36/480222-jetsons_tv_04.jpg/revision/latest/scale-to-width-down/305?cb=20170401012731&path-prefix=es');">
+  <head>
+    <title>Taller de JavaScript</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="taller.js"></script>
+    <script type="text/javascript">
+    function mostrar(){
+      let salida = document.getElementById("salida");
+      let resultado = document.getElementById("resultado");
+      resultado.innerHTML = "";
+	    salida.innerHTML = calcularResultado().replace(/\n/g,"<br/>");
+      if (resultado.innerHTML == "") {
+        resultado.style.color = "green";
+        resultado.innerHTML = "Todos los tests pasaron bien.";
+      } else {
+        resultado.style.color = "red";
+      }
+    }
+    function fail(i, m) {
+      resultado.innerHTML += " - Falló el test " + i;
+      if (m) {
+        resultado.innerHTML += ": " + m;
+      }
+      resultado.innerHTML += "<br/><br/>"
+    }
+    </script>
+  </head>
+<body>
+  <h1>Taller de Javascript</h1>
+  <div>
+    <h2>Instrucciones</h2>
+    <p>Editen el archivo taller.js y luego recarguen esta p&aacute;gina para ver el resultado de la ejecuci&oacute;n.</p>
+    <p>Probablemente necesiten recargar con <b>Ctrl+F5</b> para limpiar la cach&eacute;.
+  </div>
+  <div><h2>Salida</h2></div>
+  <div id="salida" style="border-style: groove;"></div>
+  <div><h2>Resultado</h2></div>
+  <div id="resultado" style="border-style: groove;"></div>
+</body>
+<script type="text/javascript">
+  mostrar();
+</script>
+</html>
