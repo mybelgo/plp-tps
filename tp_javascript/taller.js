@@ -1,38 +1,99 @@
 // Ejercicio 1
 function ejercicio1() {
-  Malambo = undefined;
+  Malambo = { nombre: 'Malambo', peso: 500, directiva: 'limpiar' };
 }
 
 // Ejercicio 2
 function ejercicio2() {
-  nuevoRobot = undefined;
+  nuevoRobot = function (nombre, peso, directiva) {
+    const nuevo = Object.create(Malambo);
 
-  Chacarera = undefined;
+    nuevo.nombre = nombre;
+    nuevo.peso = peso;
+    nuevo.directiva = directiva;
+
+    return nuevo;
+  };
+
+  Chacarera = nuevoRobot('Chacarera', 1500, 'cortar el pasto');
 }
 
 // Ejercicio 3
 function ejercicio3() {
+  Malambo.presentarse = function () {
+    return `Hola, soy ${this.nombre} y me encanta ${this.directiva}.`;
+  }
 
+  Malambo.limpiar = function () {
+    this.peso += 1;
+
+    return 'limpiar';
+  };
 }
 
 // Ejercicio 4
 function ejercicio4() {
-  Robot = undefined;
+  Robot = function (nombre, peso, directiva, accion) {
+    this.nombre = nombre;
+    this.peso = peso;
+    this.directiva = directiva;
+    this[directiva] = accion;
+  };
+
+  Robot.prototype.presentarse = Malambo.presentarse;
 }
 
 // Ejercicio 5
 function ejercicio5() {
-  Milonga = undefined;
+  const accion = function (remitente, destinatario, mensaje) {
+    if (mensaje in destinatario) {
+      const respuestaDestinatario = destinatario[mensaje]();
+      if (respuestaDestinatario in remitente) {
+        return remitente[respuestaDestinatario]();
+      } else {
+        return respuestaDestinatario;
+      }
+    } else {
+      return mensaje;
+    }
+  };
+
+  Milonga = new Robot('Milonga', 1200, 'mensajear', accion);
 }
 
 // Ejercicio 6
 function ejercicio6() {
-
+  RobotMensajero = function (nombre, peso, directiva, accion) {
+    Robot.call(this, nombre, peso, directiva, accion);
+  }
+  RobotMensajero.prototype.mensajear = Milonga.mensajear;
+  Object.setPrototypeOf(RobotMensajero.prototype, Robot.prototype);
 }
 
 // Ejercicio 7
 function ejercicio7() {
+  Robot.prototype.reprogramar = function (nuevaDirectiva, nuevaAccion) {
+    delete this[this.directiva];
 
+    if (nuevaAccion === undefined || nuevaDirectiva === this.directiva) {
+      this.directiva = '...';
+    } else {
+      this.directiva = nuevaDirectiva;
+      this[nuevaDirectiva] = nuevaAccion;
+    }
+  };
+
+  Robot.prototype.solicitarAyuda = function (ayudante) {
+    if ('ayudante' in this) {
+      this.ayudante.solicitarAyuda(ayudante);
+    } else {
+      this.ayudante = ayudante;
+      ayudante.directiva = this.directiva;
+      ayudante[this.directiva] = this[this.directiva];
+    }
+  }
+
+  Object.setPrototypeOf(Malambo, Robot.prototype);
 }
 
 // Editen esta función para que devuelva lo que quieran mostrar en la salida.
@@ -92,6 +153,8 @@ function testEjercicio3(res) {
   peso_malambo ++;
   res.write("Peso de Malambo después de limpiar: " + peso_malambo);
   res.test(Malambo.peso, peso_malambo);
+
+  res.assert(Object.presentarse === undefined, "Presentarse no deberia estar en Object.");
 }
 
 // Test Ejercicio 4
@@ -269,3 +332,4 @@ let nuevoRobot = undefined
 let Chacarera = undefined
 let Robot = undefined
 let Milonga = undefined
+let RobotMensajero = undefined
